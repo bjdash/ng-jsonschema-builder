@@ -41,9 +41,7 @@ export class JsonSchemaComponent implements OnInit, ControlValueAccessor {
         extraArrayOptn: '',
         menuOpen: true
     };
-    modelRef: any = {
-        model: 0
-    };
+    modelRef: string = '';
     mode;
     readonly;
     entity;
@@ -89,8 +87,11 @@ export class JsonSchemaComponent implements OnInit, ControlValueAccessor {
     }
 
     refreshSchema() {
-        this.schema = this.JsonSchema.obj2schema(this.entity, this.models);
-        this.propagateChange(this.schema);
+        setTimeout(() => {
+            console.log('Updating ng-model.', this.models);
+            this.schema = this.JsonSchema.obj2schema(this.entity, this.models);
+            this.propagateChange(this.schema);
+        })
     }
 
     str(data) {
@@ -170,15 +171,18 @@ export class JsonSchemaComponent implements OnInit, ControlValueAccessor {
                 break;
             case 'Array':
                 this.addNewPropArrObj(entity, entity._items[0]._type[0], e);
-                return;
+                break;
             case 'XOf':
                 var apic = this.JsonSchema.newString('', false, entity._parent + '.' + entity._key.replace('##ROOT##', 'data'));
                 apic._hideKey = true;
                 entity._properties.push(apic);
+                break;
             // $timeout(function () {
             //     angular.element(e.currentTarget).parents('.objCont').find('.propCont').last().find('.model-key').focus();
             // });
         }
+
+        this.refreshSchema();
     };
 
     // Add property when array type is Object
@@ -205,11 +209,11 @@ export class JsonSchemaComponent implements OnInit, ControlValueAccessor {
             this.configs.showMoreOptn = 'array';
             if (entity._type.indexOf('$ref') >= 0) {
                 this.configs.showMoreOptn = 'Array$ref';
-                this.modelRef.model = '';
+                this.modelRef = '';
             }
         } else if (entity._type.indexOf('$ref') >= 0) {
             this.configs.showMoreOptn = '$ref';
-            this.modelRef.model = '';
+            this.modelRef = '';
         } else {
             this.configs.showMoreOptn = '';
         }
@@ -227,24 +231,26 @@ export class JsonSchemaComponent implements OnInit, ControlValueAccessor {
             this.configs.extraArrayOptn = false;
         }
         e.stopPropagation();
+        this.refreshSchema()
     };
 
-    setModelFor$Ref() {
-        if (this.configs.extraArrayOptn) {
-            this.selectedEntity._items[0]._value = this.modelRef.model;
-            console.log(this.selectedEntity);
-        } else {
-            this.selectedEntity._value = this.modelRef.model;
-        }
-    }
+    //Defined in selectschema.component
+    // setModelFor$Ref() {
+    //     if (this.configs.extraArrayOptn) {
+    //         this.selectedEntity._items[0]._value = this.modelRef.model;
+    //         console.log(this.selectedEntity);
+    //     } else {
+    //         this.selectedEntity._value = this.modelRef.model;
+    //     }
+    // }
 
     removeEntity(entity) {
         const res = this.removeModel(this.entity, entity.__ID__);
         if (res !== undefined) {
             // this.data._properties.splice(res, 1);
             this.entity._properties.splice(res, 1);
-            this.refreshSchema();
         }
+        this.refreshSchema();
     }
 
     removeModel(data, id, i = null) {

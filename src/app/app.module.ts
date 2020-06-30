@@ -12,8 +12,8 @@ import { AppComponent } from './app.component';
   imports: [
     BrowserModule,
     NgJsonSchemaBuilder,
-    FormsModule,
     BrowserModule,
+    FormsModule,
     ReactiveFormsModule,
   ],
   providers: [],

@@ -15,6 +15,9 @@ export class MainJsonSchemaComponent implements OnInit {
     openMenu;
 
     @Input()
+    refreshSchema;
+
+    @Input()
     mode;
 
     @Input()
@@ -35,7 +38,7 @@ export class MainJsonSchemaComponent implements OnInit {
     };
 
     ngOnInit() {
-        console.log(this.entity);
+        console.log(this);
     }
 
     // keys(obj) {
@@ -52,6 +55,7 @@ export class MainJsonSchemaComponent implements OnInit {
             return this.hasChild.indexOf(v) >= 0;
         }) || this.hasChild.indexOf(arrType) >= 0);
     }
+
     log(ent) {
         console.log(ent);
     }

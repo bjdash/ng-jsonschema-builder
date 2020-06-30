@@ -1,5 +1,5 @@
-JSON Schema Builder
-A simple GUI tool to enable designing and building JSON schemas
+JSON Schema Builder for APIC
+A simple GUI tool to enable designing and building JSON schemas for https://apic.app
 
 ## Usage
 import { NgJsonSchemaBuilder } from 'ng-json-schema-builder';

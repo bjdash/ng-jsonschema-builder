@@ -13,7 +13,8 @@
 
 
                 <span [hidden]="entity.root$$">
-                    <input [readonly]="mode == 'static'" class="model-key" type="text" [(ngModel)]="entity._key" />
+                    <input [readonly]="mode == 'static'" (ngModelChange)="refreshSchema($event)" class="model-key"
+                        type="text" [(ngModel)]="entity._key" />
                     <!-- : -->
                 </span>
                 <span uib-dropdown class="dropdown">
@@ -31,8 +32,9 @@
                             <span *ngIf="t==='Array' && !entity._items[0]" ngClass="Unspecified"
                                 class="unspecified">[Unspecified]
                             </span>
+                            <!-- <span *ngIf="t==='$ref'" class="faint">(#/definitions/)</span> -->
                             <span *ngIf="t==='$ref' && models"
-                                class="faint">(#/definitions/{{models[entity._value].nameSpace}})</span>
+                                class="faint">(#/definitions/{{models[entity._value] && models[entity._value].nameSpace}})</span>
                             <!-- <span *ngIf="!$last" class="faint"> or </span> -->
                         </span>
                         <span class="caret"></span>
@@ -46,7 +48,7 @@
                 <div class="model-detail" [hidden]="showDetailsPan" (click)="showDetailsPan=true">
                     <span class="glyphicon glyphicon-pencil">&#9998;</span>
                 </div>
-                <div class=" model-done" *ngIf="showDetailsPan" (click)="showDetailsPan=false">
+                <div class=" model-done" *ngIf="showDetailsPan" (click)="showDetailsPan=false; refreshSchema()">
                     <span class="glyphicon glyphicon-ok">&#10003;</span>
                 </div>
                 <button class="model-remove" *ngIf="!entity.root$$ && mode != 'static'" type="button"
@@ -55,8 +57,8 @@
                 <div class="model-summary">
                     <span *ngIf="entity._description" class="icon bj-playlist_add_check ico"
                         uib-tooltip="Description present"></span>
-                    <span *ngIf="!entity.root$$"><input type="checkbox" class="small"
-                            [(ngModel)]="entity._required" />Required</span>
+                    <span *ngIf="!entity.root$$"><input type="checkbox" class="small" [(ngModel)]="entity._required"
+                            (ngModelChange)="refreshSchema($event)" />Required</span>
                 </div>
             </span>
             <span *ngIf="(mode == 'list' || mode == 'static')&& entity.root$$">{{$msg}}</span>
@@ -112,16 +114,16 @@
         </div>
         <div *ngIf="ctrl.expanded" class="objProps">
             <div *ngFor="let prop of entity._properties" class="propCont">
-                <ng-jsonschema-main [addNewProp]="addNewProp" [removeEntity]="removeEntity" [openMenu]="openMenu"
-                    [entity]="prop"></ng-jsonschema-main>
+                <ng-jsonschema-main [refreshSchema]="refreshSchema" [addNewProp]="addNewProp" [models]="models"
+                    [removeEntity]="removeEntity" [openMenu]="openMenu" [entity]="prop"></ng-jsonschema-main>
             </div>
         </div>
         <!-- ITEMS: {{entity._items}} -->
         <div
             *ngIf="entity._items && entity._items[0] && entity._type.indexOf('Object')<0 && hasChild.indexOf(entity._items[0]._type[0])>=0">
             <div *ngFor="let prop of entity._items[0]._properties" class="propCont">
-                <ng-jsonschema-main [addNewProp]="addNewProp" [removeEntity]="removeEntity" [openMenu]="openMenu"
-                    [entity]="prop"></ng-jsonschema-main>
+                <ng-jsonschema-main [refreshSchema]="refreshSchema" [addNewProp]="addNewProp" [models]="models"
+                    [removeEntity]="removeEntity" [openMenu]="openMenu" [entity]="prop"></ng-jsonschema-main>
             </div>
         </div>
         <button type="button" class="btn btn-link btn-href glyphicon glyphicon-plus obj-add"

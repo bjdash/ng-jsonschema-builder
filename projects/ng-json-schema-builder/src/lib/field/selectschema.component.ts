@@ -18,6 +18,9 @@ export class SelectSchemaJsonSchemaComponent {
     modelChangesCallback;
 
     @Input()
+    refreshSchema
+
+    @Input()
     openMenu;
 
     @Input()
@@ -28,6 +31,7 @@ export class SelectSchemaJsonSchemaComponent {
 
     @Input()
     mode;
+
     @Input()
     models;
 
@@ -63,6 +67,7 @@ export class SelectSchemaJsonSchemaComponent {
         if (event) {
             event.stopPropagation();
         }
+        this.refreshSchema();
         // if (this.openMenu) {
         //     this.openMenu();
         // }
@@ -94,6 +99,15 @@ export class SelectSchemaJsonSchemaComponent {
     }
 
     setModelFor$Ref() {
-
+        var selectedEntity = this.configs.extraArrayOptn ? this.selectedEntity._items[0] : this.selectedEntity;
+        var resPath = '#/responses/'
+        if (this.modelRef.indexOf(resPath) === 0) {
+            selectedEntity._path = resPath;
+            selectedEntity._value = this.modelRef.substring(resPath.length);
+        } else {
+            selectedEntity._path = '#/definitions/';
+            selectedEntity._value = this.modelRef;
+        }
+        this.refreshSchema();
     }
 }

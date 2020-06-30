@@ -13,13 +13,14 @@
             <div>
                 <fieldset [disabled]="readonly">
                     <div class="main">
-                        <ng-jsonschema-main [addNewProp]="addNewProp.bind(this)"
-                            [removeEntity]="removeEntity.bind(this)" [openMenu]="toggleSelectorModal.bind(this)"
-                            [entity]="entity"></ng-jsonschema-main>
+                        <ng-jsonschema-main [refreshSchema]="refreshSchema.bind(this)" [models]="models"
+                            [addNewProp]="addNewProp.bind(this)" [removeEntity]="removeEntity.bind(this)"
+                            [openMenu]="toggleSelectorModal.bind(this)" [entity]="entity"></ng-jsonschema-main>
                     </div>
                     <div *ngIf="showSelectorModal" class="model-type-selector" id="model-type-selector">
-                        <ng-jsonschema-selectschema [selectedEntity]="selectedEntity"
-                            [openMenu]="toggleSelectorModal.bind(this)" [setArrayType]="setArrayType.bind(this)"
+                        <ng-jsonschema-selectschema [refreshSchema]="refreshSchema.bind(this)"
+                            [selectedEntity]="selectedEntity" [openMenu]="toggleSelectorModal.bind(this)"
+                            [models]="models" [setArrayType]="setArrayType.bind(this)"
                             [modelChangesCallback]="modelChangesCallback.bind(this)" [modelRef]="modelRef"
                             [configs]="configs"></ng-jsonschema-selectschema>
                     </div>

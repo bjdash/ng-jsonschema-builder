@@ -1,7 +1,7 @@
 {
   "name": "ng-json-schema-builder",
-  "version": "0.0.1",
-  "description": "Json schema builder for angular",
+  "version": "0.0.2",
+  "description": "Angular Json schema builder for apic",
   "peerDependencies": {
     "@angular/common": "^9.1.11",
     "@angular/core": "^9.1.11"
