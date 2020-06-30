@@ -1,0 +1,131 @@
+<div class="objCont" *ngIf="entity && entity._type">
+    <fieldset [disabled]="entity.disabled">
+        <div class="js-row" [ngClass]="showDetailsPan?'t_bg':''">
+
+            <span [hidden]="(mode == 'list' || mode == 'static')&& entity.root$$">
+                <span class="glyphicon t_color obj-exp"
+                    [ngClass]="ctrl.expanded?'glyphicon-triangle-bottom':'glyphicon-triangle-right'"
+                    (click)="ctrl.expanded=!ctrl.expanded"
+                    *ngIf="canAddChild(entity._type, entity._items && entity._items[0] && entity._items[0]._type[0])">
+                    <span class="" *ngIf="ctrl.expanded">-</span>
+                    <span *ngIf="!ctrl.expanded">+</span>
+                </span>
+
+
+                <span [hidden]="entity.root$$">
+                    <input [readonly]="mode == 'static'" class="model-key" type="text" [(ngModel)]="entity._key" />
+                    <!-- : -->
+                </span>
+                <span uib-dropdown class="dropdown">
+
+                    <button type="button" class="btn btn-link btn-href model-selector dropdown-toggle"
+                        (click)="openMenu(entity,$event)">
+                        <span *ngFor="let t of entity._type">
+                            <span [ngClass]="t">{{t}}</span>
+                            <span *ngIf="t==='Array' && entity._items[0]" [ngClass]="entity._items[0]._type[0]"
+                                class="unspecified">[
+                                {{entity._items[0]._type[0]}}
+                                <span *ngIf="entity._items[0]._type[0]=='$ref'">
+                                    (#/definitions/{{models[entity._items[0]._value].nameSpace}})</span> ]
+                            </span>
+                            <span *ngIf="t==='Array' && !entity._items[0]" ngClass="Unspecified"
+                                class="unspecified">[Unspecified]
+                            </span>
+                            <span *ngIf="t==='$ref' && models"
+                                class="faint">(#/definitions/{{models[entity._value].nameSpace}})</span>
+                            <!-- <span *ngIf="!$last" class="faint"> or </span> -->
+                        </span>
+                        <span class="caret"></span>
+                    </button>
+                </span>
+                <span *ngIf="canAddChild(entity._type, entity._items && entity._items[0] && entity._items[0]._type[0])"
+                    class="faint">[
+                    <span>{{(entity._properties && entity._properties.length) || (entity._items && entity._items[0]._properties && entity._items[0]._properties.length)||0}}</span>
+                    ]
+                </span>
+                <div class="model-detail" [hidden]="showDetailsPan" (click)="showDetailsPan=true">
+                    <span class="glyphicon glyphicon-pencil">&#9998;</span>
+                </div>
+                <div class=" model-done" *ngIf="showDetailsPan" (click)="showDetailsPan=false">
+                    <span class="glyphicon glyphicon-ok">&#10003;</span>
+                </div>
+                <button class="model-remove" *ngIf="!entity.root$$ && mode != 'static'" type="button"
+                    (click)="removeEntity(entity)"><span class="glyphicon glyphicon-remove">&#10006;</span>
+                </button>
+                <div class="model-summary">
+                    <span *ngIf="entity._description" class="icon bj-playlist_add_check ico"
+                        uib-tooltip="Description present"></span>
+                    <span *ngIf="!entity.root$$"><input type="checkbox" class="small"
+                            [(ngModel)]="entity._required" />Required</span>
+                </div>
+            </span>
+            <span *ngIf="(mode == 'list' || mode == 'static')&& entity.root$$">{{$msg}}</span>
+        </div>
+        <div class="model-det-cont" *ngIf="showDetailsPan">
+            <div class="col-xs-6 model-det-child">
+                <div class="t_color bold">Basic Info</div>
+                <div class="">
+                    <form class="form-horizontal form-compact model-detail-form" name="detailForm" role="form">
+                        <div class="form-group" *ngIf="!entity.root$$">
+                            <label class="control-label col-xs-2">Name:</label>
+                            <div class="col-xs-9">
+                                <input type="text" class="form-control sm detail-ip" id="foldName"
+                                    [ngModelOptions]="{standalone: true}" placeholder="Field Name"
+                                    [(ngModel)]="entity._key" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-2">Desc: </label>
+                            <div class="col-xs-9">
+                                <textarea class="form-control" [(ngModel)]="entity._description"
+                                    [ngModelOptions]="{standalone: true}"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-2">Default:</label>
+                            <div class="col-xs-9">
+                                <input type="text" class="form-control sm detail-ip" [(ngModel)]="entity._default"
+                                    [ngModelOptions]="{standalone: true}" />
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-xs-6">
+                <form class="form-inline model-detail-form" name="detailForm" role="form">
+                    <div *ngIf="!entity.root$$">
+                        <div class="t_color">Common Validations</div>
+                        <div>
+                            <div class="checkbox padding">
+                                <label><input type="checkbox" class="small" [(ngModel)]="entity._required"
+                                        [ngModelOptions]="{standalone: true}" /> Required
+                                    ?</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngFor="let type of entity._type">
+                        <div class="t_color">{{type}} Validations</div>
+                        <ng-jsonschema-field [type]="type"></ng-jsonschema-field>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div *ngIf="ctrl.expanded" class="objProps">
+            <div *ngFor="let prop of entity._properties" class="propCont">
+                <ng-jsonschema-main [addNewProp]="addNewProp" [removeEntity]="removeEntity" [openMenu]="openMenu"
+                    [entity]="prop"></ng-jsonschema-main>
+            </div>
+        </div>
+        <!-- ITEMS: {{entity._items}} -->
+        <div
+            *ngIf="entity._items && entity._items[0] && entity._type.indexOf('Object')<0 && hasChild.indexOf(entity._items[0]._type[0])>=0">
+            <div *ngFor="let prop of entity._items[0]._properties" class="propCont">
+                <ng-jsonschema-main [addNewProp]="addNewProp" [removeEntity]="removeEntity" [openMenu]="openMenu"
+                    [entity]="prop"></ng-jsonschema-main>
+            </div>
+        </div>
+        <button type="button" class="btn btn-link btn-href glyphicon glyphicon-plus obj-add"
+            (click)="addNewProp(entity,$event)" [disabled]="mode == 'static'"
+            *ngIf="canAddChild(entity._type, entity._items && entity._items[0] && entity._items[0]._type[0]) && !entity.refTxt">&#10010;</button>
+    </fieldset>
+</div>

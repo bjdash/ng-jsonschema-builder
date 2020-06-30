@@ -1,0 +1,24 @@
+{
+  "name": "ng-json-schema-builder",
+  "version": "0.0.1",
+  "description": "Json schema builder for angular",
+  "peerDependencies": {
+    "@angular/common": "^9.1.11",
+    "@angular/core": "^9.1.11"
+  },
+  "dependencies": {
+    "tslib": "^1.10.0"
+  },
+  "keywords": [
+    "apic",
+    "apic-cli",
+    "api-testing"
+  ],
+  "author": "Bijaya Dash (https://apic.app)",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bjdash/ng-jsonschema-builder.git"
+  },
+  "homepage": "https://apic.app"
+}

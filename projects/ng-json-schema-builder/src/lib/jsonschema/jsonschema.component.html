@@ -1,0 +1,40 @@
+<section class="json-schema">
+    <div active="active">
+        <!-- uib-tabset -->
+        <!-- uib-tab -->
+
+        <div class="w3-bar w3-black">
+            <button (click)="convertSchema2Obj()">Designer</button>
+            <button (click)="convertObj2Schema()">JSON Schema</button>
+            <button (click)="downloadJSON()">Download JSON</button>
+        </div>
+
+        <div index="0" heading="Designer" *ngIf="heading==='Designer'">
+            <div>
+                <fieldset [disabled]="readonly">
+                    <div class="main">
+                        <ng-jsonschema-main [addNewProp]="addNewProp.bind(this)"
+                            [removeEntity]="removeEntity.bind(this)" [openMenu]="toggleSelectorModal.bind(this)"
+                            [entity]="entity"></ng-jsonschema-main>
+                    </div>
+                    <div *ngIf="showSelectorModal" class="model-type-selector" id="model-type-selector">
+                        <ng-jsonschema-selectschema [selectedEntity]="selectedEntity"
+                            [openMenu]="toggleSelectorModal.bind(this)" [setArrayType]="setArrayType.bind(this)"
+                            [modelChangesCallback]="modelChangesCallback.bind(this)" [modelRef]="modelRef"
+                            [configs]="configs"></ng-jsonschema-selectschema>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+        <div index="1" heading="JSON Schema" *ngIf="heading==='JSON Schema'">
+
+            <!-- <json-editor *ngIf="schema && schema.json" [options]="editorOptions" [data]="schema.json">
+            </json-editor> -->
+            {{schema.json|json}}
+            <hr />
+
+
+            <!-- <pre ui-ace="{mode: 'json'}" [(ngModel)]="schema.original" class="highlight">{{schema.original}}</pre> -->
+        </div>
+    </div>
+</section>
