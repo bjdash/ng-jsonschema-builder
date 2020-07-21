@@ -7,47 +7,48 @@ import { FieldJsonSchemaComponent } from './field/field.component';
 import { SelectSchemaJsonSchemaComponent } from './field/selectschema.component';
 import { StateService } from './state.service';
 
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+
 export const CustomDirectives = [
-    JsonSchemaComponent,
-    MainJsonSchemaComponent,
-    FieldJsonSchemaComponent,
-    SelectSchemaJsonSchemaComponent
+  JsonSchemaComponent,
+  MainJsonSchemaComponent,
+  FieldJsonSchemaComponent,
+  SelectSchemaJsonSchemaComponent,
 ];
 
 export const NgBrDirectives = {
-    JsonSchemaComponent,
-    MainJsonSchemaComponent,
-    FieldJsonSchemaComponent,
-    SelectSchemaJsonSchemaComponent
+  JsonSchemaComponent,
+  MainJsonSchemaComponent,
+  FieldJsonSchemaComponent,
+  SelectSchemaJsonSchemaComponent,
 };
 
 @NgModule({
-    imports: [
-        CommonModule,
-        FormsModule
-    ],
-    declarations: [
-        CustomDirectives
-    ],
-    exports: [
-        CustomDirectives
-    ],
-    providers: [
-        StateService,
-        {
-            provide: NG_VALUE_ACCESSOR,
-            useExisting: forwardRef(() => JsonSchemaComponent),
-            multi: true
-        }
-    ]
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatTabsModule,
+    MatIconModule,
+    MatButtonModule,
+  ],
+  declarations: [CustomDirectives],
+  exports: [CustomDirectives],
+  providers: [
+    StateService,
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => JsonSchemaComponent),
+      multi: true,
+    },
+  ],
 })
 class NgJsonSchemaBuilder {
-    public static forRoot(): ModuleWithProviders {
-        return {
-            ngModule: NgJsonSchemaBuilder
-        };
-    }
+  public static forRoot(): ModuleWithProviders {
+    return {
+      ngModule: NgJsonSchemaBuilder,
+    };
+  }
 }
-export {
-    NgJsonSchemaBuilder
-}
+export { NgJsonSchemaBuilder };
